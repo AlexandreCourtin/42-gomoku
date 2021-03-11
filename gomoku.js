@@ -49,38 +49,8 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	window.addEventListener('mousemove', onDocumentMouseMove, false);
 
-	// MESH
-	const blackMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-	const boardGroup = new THREE.Group();
-	const mainCube = new THREE.Mesh(new THREE.BoxGeometry( 800, 800, 50 ),
-		new THREE.MeshBasicMaterial({
-			map: new THREE.TextureLoader().load( 'wood.jpg' )
-		})
-	);
-	boardGroup.add(mainCube);
-
-	const length = 711;
-	const z = 51;
-	const thickness = 2;
-	for (let i = 0 ; i < 19 ; i++) {
-
-		const line = new THREE.Mesh(new THREE.BoxGeometry(thickness, length, z), blackMat);
-		const line2 = new THREE.Mesh(new THREE.BoxGeometry(length, thickness, z), blackMat);
-		const correctedPos = -(length * .5) + (i * 39.5);
-
-		line.position.x = correctedPos;
-		line2.position.y = correctedPos;
-		boardGroup.add(line);
-		boardGroup.add(line2);
-	}
-	for (let i = 0 ; i < 3 ; i++) {
-		for (let j = 0 ; j < 3 ; j++) {
-			const littleBox = new THREE.Mesh(new THREE.BoxGeometry(10, 10, z), blackMat)
-			littleBox.position.set(-237 + (i * 237), -237 + (j * 237), 0);
-			boardGroup.add(littleBox);
-		}
-	}
-	scene.add(boardGroup);
+	let boardObject = new Board();
+	scene.add(boardObject.boardGroup);
 }
 
 //LOGIC FUNCTIONS
