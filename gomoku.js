@@ -61,7 +61,19 @@ function init() {
 }
 
 //LOGIC FUNCTIONS
+function lerp(a, b, f) {
+	return a + f * (b - a);
+}
+
 function loop() {
+	// CAMERA LOOK
+	const correctedMouseX = mouse.x * 300;
+	const correctedMouseY = mouse.y * 300;
+	const lerpPower = .0001;
+	camera.position.x = lerp(camera.position.x, correctedMouseX, lerpPower * (Math.max(camera.position.x, correctedMouseX) - Math.min(camera.position.x, correctedMouseX)));
+	camera.position.y = lerp(camera.position.y, correctedMouseY, lerpPower * (Math.max(camera.position.y, correctedMouseY) - Math.min(camera.position.y, correctedMouseY)));
+	camera.lookAt(new THREE.Vector3(0, 0, 0));
+
 	renderer.render(scene, camera);
 	requestAnimationFrame(loop);
 }
@@ -71,9 +83,6 @@ function onDocumentMouseMove( event ) {
 	const canvasBounds = renderer.domElement.getBoundingClientRect();
 	mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
 	mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
-	camera.position.x = mouse.x * 300;
-	camera.position.y = mouse.y * 300;
-	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 	// raycaster.setFromCamera( mouse, camera );
 	// var intersects = raycaster.intersectObjects( students.map((s) => {return s.threegroup.children[0]}) );
