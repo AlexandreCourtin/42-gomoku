@@ -49,8 +49,15 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	window.addEventListener('mousemove', onDocumentMouseMove, false);
 
-	let boardObject = new Board();
+	const boardObject = new Board();
 	scene.add(boardObject.boardGroup);
+
+	for (let i = 0 ; i < 19 ; i++) {
+		for (let j = 0 ; j < 19 ; j++) {
+			const rr = new Rock(i, j, (i + j) % 2);
+			scene.add(rr.group);
+		}
+	}
 }
 
 //LOGIC FUNCTIONS
