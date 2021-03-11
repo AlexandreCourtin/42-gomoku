@@ -13,7 +13,7 @@ function Rock(x, y, team) {
 		mat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 	}
 
-	const mesh = new THREE.Mesh(new THREE.SphereGeometry( 16, 32, 32 ), mat);
+	const mesh = new THREE.Mesh(new THREE.SphereGeometry( 16, 10, 10 ), mat);
 	this.group.add(mesh);
 
 	const posX = (-39.5 * 9) + (39.5 * this.x);

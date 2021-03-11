@@ -14,7 +14,10 @@ let HEIGHT,
 	windowHalfX,
 	windowHalfY;
 
-let mouse = new THREE.Vector2();
+const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+let rocks = [];
+let selectedRock = null;
 
 function onWindowResize() {
 	HEIGHT = window.innerHeight;
@@ -54,15 +57,20 @@ function init() {
 
 	for (let i = 0 ; i < 19 ; i++) {
 		for (let j = 0 ; j < 19 ; j++) {
-			const rr = new Rock(i, j, (i + j) % 2);
-			scene.add(rr.group);
+			rocks[j + (i * 19)] = new Rock(i, j, (i + j) % 2);
+			scene.add(rocks[j + (i * 19)].group);
 		}
 	}
 }
 
-//LOGIC FUNCTIONS
 function lerp(a, b, f) {
 	return a + f * (b - a);
+}
+
+function checkSelectedRock(selectedRock) {
+	if (selectedRock != null) {
+		selectedRock.group.scale.set(1, 1, 1);
+	}
 }
 
 function loop() {
@@ -84,22 +92,19 @@ function onDocumentMouseMove( event ) {
 	mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
 	mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
 
-	// raycaster.setFromCamera( mouse, camera );
-	// var intersects = raycaster.intersectObjects( students.map((s) => {return s.threegroup.children[0]}) );
-	// if ( intersects.length > 0 ) {
-	// 	students.forEach((s) => {
-	// 		if (intersects[0].object.parent == s.threegroup) {
-	// 			selectedName = s.name;
-	// 			if (selectedGroup) selectedGroup.scale.set(1, 1, 1);
-	// 			selectedGroup = s.threegroup;
-	// 			selectedGroup.scale.set(2, 2, 2);
-	// 		}
-	// 	});
-	// } else {
-	// 	selectedName = '';
-	// 	if (selectedGroup) selectedGroup.scale.set(1, 1, 1);
-	// 	selectedGroup = null;
-	// }
+	raycaster.setFromCamera( mouse, camera );
+	var intersects = raycaster.intersectObjects( rocks.map((r) => { return r.group.children[0] }) );
+	if ( intersects.length > 0 ) {
+		rocks.forEach((r) => {
+			if ( intersects[0].object.parent == r.group ) {
+				checkSelectedRock(selectedRock);
+				selectedRock = r;
+				selectedRock.group.scale.set(1.5, 1.5, 1.5);
+			}
+		});
+	} else {
+		checkSelectedRock(selectedRock);
+	}
 }
 
 //MAIN
